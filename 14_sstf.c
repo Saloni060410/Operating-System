@@ -19,6 +19,9 @@ int main() {
 
     int seek = 0;
 
+
+    printf("Seek Sequence: %d", head);
+
     for(int i = 0; i < n; i++) {
         int min = 9999, idx = -1;
 
@@ -32,8 +35,10 @@ int main() {
         seek += min;
         head = req[idx];
         done[idx] = 1;
+        printf(" -> %d", head);
     }
 
+    printf("\n");
     printf("Total Seek Time = %d\n", seek);
     return 0;
 }

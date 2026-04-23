@@ -30,27 +30,32 @@ int main() {
     sort(req, n);
 
     int seek = 0;
+    printf("Seek Sequence: %d", head);
 
     // Move right
     for(int i = 0; i < n; i++) {
         if(req[i] >= head) {
             seek += abs(head - req[i]);
             head = req[i];
+            printf(" -> %d", head);
         }
     }
 
     // Jump to first request
     seek += abs(head - req[0]);
     head = req[0];
+    printf(" -> %d", head);
 
     // Continue
     for(int i = 0; i < n; i++) {
         if(req[i] < head) {
             seek += abs(head - req[i]);
             head = req[i];
+            printf(" -> %d", head);
         }
     }
 
+    printf("\n");
     printf("Total Seek Time = %d\n", seek);
     return 0;
 }

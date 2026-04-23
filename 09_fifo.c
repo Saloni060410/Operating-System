@@ -40,6 +40,7 @@ void fifo(int pages[], int n, int frames) {
     }
 
     printf("\n\nTotal Page Faults = %d\n", pageFaults);
+    printf("\n Total page hits = %d\n",n-pageFaults);
 }
 
 int main() {
@@ -49,17 +50,3 @@ int main() {
     scanf("%d", &n);
 
     int pages[n];
-
-    printf("Enter page reference string:\n");
-    for(int i = 0; i < n; i++) {
-        scanf("%d", &pages[i]);
-    }
-
-    printf("Enter number of frames: ");
-    scanf("%d", &frames);
-
-    // Function call
-    fifo(pages, n, frames);
-
-    return 0;
-}

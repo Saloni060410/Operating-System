@@ -1,54 +1,67 @@
 #include <stdio.h>
 
-// Function for First Fit allocation
-void firstFit(int blockSize[], int m, int processSize[], int n, int allocation[]) {
+int main() {
+    int size[20]   = {100,300,40,50,150,240,200,400};
+    int status[20] = {1,0,1,0,1,0,1,0}; // 1 = allocated, 0 = free
+    int n = 8;
 
-    for(int i = 0; i < n; i++) {
+    for(int i=0;i<n;i++){
+        printf("%d\t%d\t%s\n", i+1, size[i],
+               status[i]?"Allocated":"Free");
+    }
 
-        for(int j = 0; j < m; j++) {
-            if(blockSize[j] >= processSize[i]) {
-                allocation[i] = j;
-                blockSize[j] -= processSize[i];
-                break;  // move to next process
+    int m;
+    printf("Enter number of processes: ");
+    scanf("%d", &m);
+
+    int req[20];
+    for(int i=0;i<m;i++){
+        printf("Enter size of process %d: ", i+1);
+        scanf("%d",&req[i]);
+    }
+
+    printf("\nInitial Memory:\n");
+    printf("No\tSize\tStatus\n");
+    for(int i=0;i<n;i++){
+        printf("%d\t%d\t%s\n", i+1, size[i],
+               status[i]?"Allocated":"Free");
+    }
+
+    for(int i=0;i<m;i++){
+        for(int j=0;j<n;j++){
+            if(status[j]==0 && size[j]>=req[i]){
+
+                printf("\nProcess %d -> Block %d (%d KB)\n", i+1, j+1, size[j]);
+
+                int rem = size[j] - req[i];
+
+                status[j]=1;
+                size[j]=req[i];
+
+                if(rem>0){
+                    for(int k=n;k>j+1;k--){
+                        size[k]=size[k-1];
+                        status[k]=status[k-1];
+                    }
+                    size[j+1]=rem;
+                    status[j+1]=0;
+                    n++;
+                }
+                break;
             }
         }
     }
-}
 
-int main() {
-    int m, n;
+    printf("\nFinal Memory:\n");
+    printf("No\tSize\tStatus\n");
 
-    printf("Enter number of memory blocks: ");
-    scanf("%d", &m);
+    int totalFree=0;
+    for(int i=0;i<n;i++){
+        printf("%d\t%d\t%s\n", i+1, size[i],
+               status[i]?"Allocated":"Free");
 
-    int blockSize[m];
-    printf("Enter block sizes:\n");
-    for(int i = 0; i < m; i++) {
-        scanf("%d", &blockSize[i]);
+        if(status[i]==0) totalFree+=size[i];
     }
 
-    printf("Enter number of processes: ");
-    scanf("%d", &n);
-
-    int processSize[n], allocation[n];
-
-    printf("Enter process sizes:\n");
-    for(int i = 0; i < n; i++) {
-        scanf("%d", &processSize[i]);
-        allocation[i] = -1;  // initially not allocated
-    }
-
-    // Function call
-    firstFit(blockSize, m, processSize, n, allocation);
-
-    // Display in main
-    printf("\nProcess\tSize\tBlock\n");
-    for(int i = 0; i < n; i++) {
-        if(allocation[i] != -1)
-            printf("P%d\t%d\t%d\n", i+1, processSize[i], allocation[i]+1);
-        else
-            printf("P%d\t%d\tNot Allocated\n", i+1, processSize[i]);
-    }
-
-    return 0;
+    printf("\nTotal Free Space = %d KB\n", totalFree);
 }

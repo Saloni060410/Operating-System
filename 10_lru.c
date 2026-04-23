@@ -50,6 +50,7 @@ void lru(int pages[], int n, int frames) {
     }
 
     printf("\n\nTotal Page Faults = %d\n", pageFaults);
+    printf("\n Total page hits = %d\n",n-pageFaults);
 }
 
 int main() {

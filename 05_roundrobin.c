@@ -1,8 +1,10 @@
 #include <stdio.h>
 
-// Function to perform Round Robin scheduling
+// Round Robin with Gantt Chart
 void roundRobin(int bt[], int rt[], int wt[], int tat[], int n, int tq) {
     int time = 0, done;
+
+    printf("\nGantt Chart:\n|");
 
     do {
         done = 1;
@@ -10,6 +12,8 @@ void roundRobin(int bt[], int rt[], int wt[], int tat[], int n, int tq) {
         for(int i = 0; i < n; i++) {
             if(rt[i] > 0) {
                 done = 0;
+
+                printf(" P%d |", i+1);
 
                 if(rt[i] > tq) {
                     time += tq;
@@ -26,9 +30,38 @@ void roundRobin(int bt[], int rt[], int wt[], int tat[], int n, int tq) {
         }
 
     } while(done == 0);
+
+    // Print time line
+    printf("\n0");
+    time = 0;
+
+    // Re-simulate just for time printing
+    int temp_rt[n];
+    for(int i=0;i<n;i++) temp_rt[i] = bt[i];
+
+    do {
+        done = 1;
+
+        for(int i = 0; i < n; i++) {
+            if(temp_rt[i] > 0) {
+                done = 0;
+
+                if(temp_rt[i] > tq) {
+                    time += tq;
+                    temp_rt[i] -= tq;
+                } else {
+                    time += temp_rt[i];
+                    temp_rt[i] = 0;
+                }
+
+                printf("   %d", time);
+            }
+        }
+
+    } while(done == 0);
 }
 
-// Function to calculate averages
+// Average
 void calculateAvg(int wt[], int tat[], int n) {
     float sum_wt = 0, sum_tat = 0;
 
@@ -37,7 +70,7 @@ void calculateAvg(int wt[], int tat[], int n) {
         sum_tat += tat[i];
     }
 
-    printf("\nAverage WT = %.2f", sum_wt/n);
+    printf("\n\nAverage WT = %.2f", sum_wt/n);
     printf("\nAverage TAT = %.2f\n", sum_tat/n);
 }
 
@@ -49,22 +82,18 @@ int main() {
 
     int bt[n], rt[n], wt[n], tat[n];
 
-    // Input
-    printf("Enter burst time:\n");
     for(int i = 0; i < n; i++) {
-        printf("P%d: ", i+1);
+        printf("P%d Burst Time: ", i+1);
         scanf("%d", &bt[i]);
-        rt[i] = bt[i];  // initialize remaining time
+        rt[i] = bt[i];
     }
 
     printf("Enter Time Quantum: ");
     scanf("%d", &tq);
 
-    // Function call
     roundRobin(bt, rt, wt, tat, n, tq);
 
-    // Output
-    printf("\nProcess\tBT\tTAT\tWT\n");
+    printf("\n\nProcess\tBT\tTAT\tWT\n");
     for(int i = 0; i < n; i++) {
         printf("P%d\t%d\t%d\t%d\n", i+1, bt[i], tat[i], wt[i]);
     }

@@ -5,4 +5,5 @@
 ps aux --sort=-%cpu | head -10
 ps aux --sort=-%mem | head -1
 whoami
+logname
 head -11 file.txt

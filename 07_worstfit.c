@@ -1,38 +1,65 @@
 #include <stdio.h>
 
 int main() {
-    // Predefined memory blocks
-    int size[]   = {100, 300, 40, 50, 150, 240, 200, 400};
-    int status[] = {0,   1,   0,  1,   0,   1,   0,   1};
-
-    char process[8][10] = {"P1","-","P2","-","P3","-","P4","-"};
-
+    int size[20]   = {100,300,40,50,150,240,200,400};
+    int status[20] = {1,0,1,0,1,0,1,0};
     int n = 8;
 
-    // New processes to allocate
-    int req[] = {60, 70, 120};
-    int m = 3;
+    for(int i=0;i<n;i++){
+        printf("%d\t%d\t%s\n", i+1, size[i],
+               status[i]?"Allocated":"Free");
+    }
 
-    for(int i = 0; i < m; i++) {
-        int worstIdx = -1;
+    int m;
+    printf("Enter number of processes: ");
+    scanf("%d", &m);
 
-        for(int j = 0; j < n; j++) {
-            if(status[j] == 0 && size[j] >= req[i]) {
+    int req[20];
+    for(int i=0;i<m;i++){
+        printf("Enter size of process %d: ", i+1);
+        scanf("%d",&req[i]);
+    }
 
-                if(worstIdx == -1 || size[j] > size[worstIdx]) {
-                    worstIdx = j;
-                }
+    for(int i=0;i<m;i++){
+        int worst=-1;
+
+        for(int j=0;j<n;j++){
+            if(status[j]==0 && size[j]>=req[i]){
+                if(worst==-1 || size[j]>size[worst])
+                    worst=j;
             }
         }
 
-        if(worstIdx != -1) {
-            printf("Process %d (%d KB) allocated to block %d (%d KB)\n",i+1, req[i], worstIdx+1, size[worstIdx]);
+        if(worst!=-1){
+            printf("\nProcess %d -> Block %d (%d KB)\n", i+1, worst+1, size[worst]);
 
-            status[worstIdx] = 1;   // mark as occupied
-        } else {
-            printf("Process %d (%d KB) not allocated\n", i+1, req[i]);
+            int rem = size[worst] - req[i];
+
+            status[worst]=1;
+            size[worst]=req[i];
+
+            if(rem>0){
+                for(int k=n;k>worst+1;k--){
+                    size[k]=size[k-1];
+                    status[k]=status[k-1];
+                }
+                size[worst+1]=rem;
+                status[worst+1]=0;
+                n++;
+            }
         }
     }
 
-    return 0;
+    printf("\nFinal Memory:\n");
+    printf("No\tSize\tStatus\n");
+
+    int totalFree=0;
+    for(int i=0;i<n;i++){
+        printf("%d\t%d\t%s\n", i+1, size[i],
+               status[i]?"Allocated":"Free");
+
+        if(status[i]==0) totalFree+=size[i];
+    }
+
+    printf("\nTotal Free Space = %d KB\n", totalFree);
 }

@@ -1,67 +1,80 @@
 #include <stdio.h>
 
-// Function to find process with minimum remaining time
-int findShortest(int at[], int rt[], int n, int time) {
-    int idx = -1;
-    int min = 9999;
-
-    for(int i = 0; i < n; i++) {
-        if(at[i] <= time && rt[i] > 0) {
-            if(rt[i] < min) {
-                min = rt[i];
-                idx = i;
-            }
-        }
-    }
-    return idx;
-}
-
 int main() {
     int n;
     printf("Enter number of processes: ");
     scanf("%d", &n);
 
-    int at[n], bt[n], rt[n];
-    int ct[n], wt[n], tat[n];
+    int at[n], bt[n], rt[n], wt[n], tat[n];
 
-    // Input
-    printf("Enter Arrival Time and Burst Time:\n");
     for(int i = 0; i < n; i++) {
-        printf("P%d: ", i+1);
-        scanf("%d %d", &at[i], &bt[i]);
-        rt[i] = bt[i];  // remaining time
+        printf("\nP%d Arrival Time: ", i+1);
+        scanf("%d", &at[i]);
+
+        printf("P%d Burst Time: ", i+1);
+        scanf("%d", &bt[i]);
+
+        rt[i] = bt[i];
     }
 
-    int time = 0, done = 0;
+    int time = 0, completed = 0;
 
-    // Scheduling
-    while(done < n) {
-        int idx = findShortest(at, rt, n, time);
+    int prev = -1;
+    int start[100], process[100], k = 0;
 
-        if(idx == -1) {
-            time++;  // CPU idle
-        } else {
-            rt[idx]--;  // execute for 1 unit
+    printf("\nGantt Chart:\n|");
+
+    while(completed < n) {
+        int min = 999, idx = -1;
+
+        for(int i = 0; i < n; i++) {
+            if(at[i] <= time && rt[i] > 0 && rt[i] < min) {
+                min = rt[i];
+                idx = i;
+            }
+        }
+
+        if(idx != -1) {
+            if(prev != idx) {
+                printf(" P%d |", idx+1);
+                process[k] = idx;
+                start[k] = time;
+                k++;
+                prev = idx;
+            }
+
+            rt[idx]--;
             time++;
 
-            // If process completes
             if(rt[idx] == 0) {
-                ct[idx] = time;
-                tat[idx] = ct[idx] - at[idx];
+                completed++;
+                tat[idx] = time - at[idx];
                 wt[idx] = tat[idx] - bt[idx];
-                done++;
             }
+
+        } else {
+            time++; // idle
         }
     }
 
-    // Output
+    // Print time line
+    printf("\n0");
+    for(int i = 0; i < k; i++) {
+        int end;
+        if(i == k-1)
+            end = time;
+        else
+            end = start[i+1];
+
+        printf("   %d", end);
+    }
+
+    // Table
     float total_wt = 0, total_tat = 0;
 
-    printf("\nP\tAT\tBT\tCT\tTAT\tWT\n");
+    printf("\n\nProcess\tAT\tBT\tWT\tTAT\n");
     for(int i = 0; i < n; i++) {
-        printf("P%d\t%d\t%d\t%d\t%d\t%d\n",
-               i+1, at[i], bt[i], ct[i], tat[i], wt[i]);
-
+        printf("P%d\t%d\t%d\t%d\t%d\n", i+1, at[i], bt[i], wt[i], tat[i]);
         total_wt += wt[i];
         total_tat += tat[i];
     }

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 int main() {
     int n, head;
@@ -17,11 +18,15 @@ int main() {
 
     int seek = 0;
 
+
+    printf("Seek Sequence: %d", head);
+
     for(int i = 0; i < n; i++) {
         seek += abs(head - req[i]);
         head = req[i];
+        printf(" -> %d", head);
     }
 
-    printf("Total Seek Time = %d\n", seek);
+    printf("\nTotal Seek Time = %d\n", seek);
     return 0;
 }
