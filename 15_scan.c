@@ -32,12 +32,14 @@ int main() {
 
     sort(req, n);
 
+    int start=head;
+
     int seek = 0;
     printf("Seek Sequence: %d", head);
 
     // Move right
     for(int i = 0; i < n; i++) {
-        if(req[i] >= head) {
+        if(req[i] >= start) {
             seek += abs(head - req[i]);
             head = req[i];
             printf(" -> %d", head);
@@ -51,7 +53,7 @@ int main() {
 
     // Move left
     for(int i = n-1; i >= 0; i--) {
-        if(req[i] < head) {
+        if(req[i] < start) {
             seek += abs(head - req[i]);
             head = req[i];
             printf(" -> %d", head);

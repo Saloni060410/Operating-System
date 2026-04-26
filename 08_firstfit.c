@@ -5,9 +5,10 @@ int main() {
     int status[20] = {1,0,1,0,1,0,1,0}; // 1 = allocated, 0 = free
     int n = 8;
 
+    printf("\nInitial Memory:\n");
+    printf("No\tSize\tStatus\n");
     for(int i=0;i<n;i++){
-        printf("%d\t%d\t%s\n", i+1, size[i],
-               status[i]?"Allocated":"Free");
+        printf("%d\t%d\t%s\n", i+1, size[i],status[i]?"Allocated":"Free");
     }
 
     int m;
@@ -18,13 +19,6 @@ int main() {
     for(int i=0;i<m;i++){
         printf("Enter size of process %d: ", i+1);
         scanf("%d",&req[i]);
-    }
-
-    printf("\nInitial Memory:\n");
-    printf("No\tSize\tStatus\n");
-    for(int i=0;i<n;i++){
-        printf("%d\t%d\t%s\n", i+1, size[i],
-               status[i]?"Allocated":"Free");
     }
 
     for(int i=0;i<m;i++){
@@ -57,10 +51,10 @@ int main() {
 
     int totalFree=0;
     for(int i=0;i<n;i++){
-        printf("%d\t%d\t%s\n", i+1, size[i],
-               status[i]?"Allocated":"Free");
+        printf("%d\t%d\t%s\n", i+1, size[i],status[i]?"Allocated":"Free");
 
-        if(status[i]==0) totalFree+=size[i];
+        if(status[i]==0)
+            totalFree+=size[i];
     }
 
     printf("\nTotal Free Space = %d KB\n", totalFree);

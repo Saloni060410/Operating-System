@@ -16,7 +16,7 @@ void fifo(int pages[], int n, int frames) {
 
         // Check if page already in frame (hit)
         for(int j = 0; j < frames; j++) {
-            if(frame[j] == pages[i]) {
+            if(frame[j] == pages[i]) { 
                 found = 1;
                 break;
             }
@@ -50,3 +50,15 @@ int main() {
     scanf("%d", &n);
 
     int pages[n];
+
+    printf("Enter page reference string:\n");
+    for(int i = 0; i < n; i++) {
+        scanf("%d", &pages[i]);
+    }
+
+    printf("Enter number of frames: ");
+    scanf("%d", &frames);
+
+    // Function call
+    fifo(pages, n, frames);
+}
